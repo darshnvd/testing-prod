@@ -198,6 +198,9 @@ const runbooks = [
 // Runbook executions
 const executions = [];
 
+// Escalation records
+const escalations = [];
+
 // Escalation policies
 const escalationPolicies = [
   {
@@ -395,6 +398,7 @@ module.exports = {
   incidents,
   runbooks,
   executions,
+  escalations,
   escalationPolicies,
   knowledgeBase,
   serviceDependencies,

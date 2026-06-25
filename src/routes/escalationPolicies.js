@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
-const { escalationPolicies, incidents } = require('../data/store');
+const { escalationPolicies, incidents, escalations } = require('../data/store');
 
 // GET /api/v1/escalation-policies - List escalation policies
 router.get('/', (req, res) => {
@@ -74,6 +74,8 @@ router.post('/escalate', (req, res) => {
       ? policy.levels[(target_level || policy.levels.length) - 1]?.targets || []
       : ['engineering-manager@company.com']
   };
+
+  escalations.push(escalation);
 
   res.json({
     message: 'Escalation triggered',

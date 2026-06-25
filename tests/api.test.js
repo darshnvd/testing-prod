@@ -1,10 +1,48 @@
 const request = require('supertest');
-const app = require('../src/index');
 
 const API_KEY = 'oncall-agent-secret-key-2024';
 const AUTH_HEADER = `Bearer ${API_KEY}`;
 
+// Set API_KEY env var for test environment before loading app
+process.env.API_KEY = API_KEY;
+
+const app = require('../src/index');
+const store = require('../src/data/store');
+
+// Capture the initial state for reset
+function getInitialState() {
+  return {
+    agentState: {
+      status: 'running',
+      startedAt: new Date(Date.now() - 3600000).toISOString(),
+      config: {
+        profile: 'production',
+        autoTriageEnabled: true,
+        autoEscalateAfterMinutes: 15,
+        maxConcurrentIncidents: 10,
+        notificationChannels: ['slack', 'pagerduty', 'email']
+      },
+      integrations: {
+        pagerduty: { status: 'connected', lastSync: new Date(Date.now() - 60000).toISOString() },
+        slack: { status: 'connected', lastSync: new Date(Date.now() - 30000).toISOString() },
+        datadog: { status: 'connected', lastSync: new Date(Date.now() - 45000).toISOString() },
+        jira: { status: 'connected', lastSync: new Date(Date.now() - 120000).toISOString() }
+      }
+    }
+  };
+}
+
 describe('OnCall AI Agent API', () => {
+  beforeEach(() => {
+    // Reset agent state before each test to avoid ordering dependencies
+    const initial = getInitialState();
+    Object.assign(store.agentState, initial.agentState);
+    store.agentState.config = { ...initial.agentState.config };
+    store.agentState.integrations = JSON.parse(JSON.stringify(initial.agentState.integrations));
+
+    // Clear any dynamically added escalations
+    store.escalations.length = 0;
+  });
   // === Authentication Middleware ===
   describe('Authentication', () => {
     it('should reject requests without Authorization header', async () => {
@@ -66,7 +104,22 @@ describe('OnCall AI Agent API', () => {
       expect(res.body.message).toContain('stopped');
     });
 
+    it('POST /api/v1/agent/stop should clear startedAt', async () => {
+      await request(app)
+        .post('/api/v1/agent/stop')
+        .set('Authorization', AUTH_HEADER);
+      const res = await request(app)
+        .get('/api/v1/agent/status')
+        .set('Authorization', AUTH_HEADER);
+      expect(res.status).toBe(200);
+      expect(res.body.uptime.ms).toBe(0);
+    });
+
     it('POST /api/v1/agent/start should start the agent', async () => {
+      // First stop the agent so we can start it
+      store.agentState.status = 'stopped';
+      store.agentState.startedAt = null;
+
       const res = await request(app)
         .post('/api/v1/agent/start')
         .set('Authorization', AUTH_HEADER)
@@ -99,6 +152,15 @@ describe('OnCall AI Agent API', () => {
         .set('Authorization', AUTH_HEADER)
         .send({});
       expect(res.status).toBe(400);
+    });
+
+    it('PATCH /api/v1/agent/config should reject invalid keys', async () => {
+      const res = await request(app)
+        .patch('/api/v1/agent/config')
+        .set('Authorization', AUTH_HEADER)
+        .send({ injectedKey: true, unknownField: 'test' });
+      expect(res.status).toBe(400);
+      expect(res.body.message).toContain('Invalid configuration keys');
     });
 
     it('GET /api/v1/agent/health should return deep health check', async () => {

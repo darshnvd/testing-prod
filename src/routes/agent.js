@@ -59,6 +59,7 @@ router.post('/stop', (req, res) => {
   }
 
   agentState.status = 'stopped';
+  agentState.startedAt = null;
 
   res.status(200).json({
     message: 'Agent stopped gracefully',
@@ -66,6 +67,15 @@ router.post('/stop', (req, res) => {
     stoppedAt: new Date().toISOString()
   });
 });
+
+// Whitelist of allowed config keys
+const ALLOWED_CONFIG_KEYS = [
+  'profile',
+  'autoTriageEnabled',
+  'autoEscalateAfterMinutes',
+  'maxConcurrentIncidents',
+  'notificationChannels'
+];
 
 // PATCH /api/v1/agent/config - Update runtime configuration
 router.patch('/config', (req, res) => {
@@ -75,6 +85,14 @@ router.patch('/config', (req, res) => {
     return res.status(400).json({
       error: 'Bad Request',
       message: 'No configuration updates provided'
+    });
+  }
+
+  const invalidKeys = Object.keys(updates).filter(key => !ALLOWED_CONFIG_KEYS.includes(key));
+  if (invalidKeys.length > 0) {
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: `Invalid configuration keys: ${invalidKeys.join(', ')}. Allowed keys: ${ALLOWED_CONFIG_KEYS.join(', ')}`
     });
   }
 
