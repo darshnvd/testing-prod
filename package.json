@@ -1,0 +1,26 @@
+{
+  "name": "oncall-agent-api",
+  "version": "1.0.0",
+  "description": "OnCall AI Agent Control Plane API - manages incident response, runbook execution, escalation policies, and observability",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest --forceExit"
+  },
+  "keywords": ["oncall", "incident-management", "ai-agent", "runbooks", "escalation"],
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
+  }
+}

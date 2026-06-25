@@ -1,0 +1,24 @@
+{
+  "project_type": "Node.js Express REST API - OnCall AI Agent Control Plane",
+  "language": "JavaScript (Node.js)",
+  "build_system": "npm",
+  "test_framework": "jest or built-in test runner",
+  "build_command": "source ~/.nvm/nvm.sh && nvm use 22 && npm install",
+  "test_command": "source ~/.nvm/nvm.sh && nvm use 22 && npm test",
+  "verification_instructions": "1. Run npm install to install deps. 2. Run npm start and verify server starts. 3. Run npm test to verify all tests pass. 4. Test a few endpoints with curl.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "source ~/.nvm/nvm.sh && nvm use 22 && cd /projects/sandbox/testing-prod && npm install",
+  "environment_constraints": "Node.js available via nvm (v22.22.3). Must source ~/.nvm/nvm.sh before using node/npm. Open internet - can install npm packages freely.",
+  "contribution_requirements": "Greenfield project. Single commit with all files at the end.",
+  "key_patterns": "Express.js REST API with modular route files, Bearer token auth middleware, in-memory data store, realistic mock responses.",
+  "relevant_files": [
+    "package.json",
+    "src/index.js",
+    "src/routes/",
+    "src/middleware/",
+    "src/data/",
+    "README.md",
+    ".env.example"
+  ],
+  "directory_structure": "Greenfield - to be created with: src/ (main source), src/routes/ (route handlers by domain), src/middleware/ (auth, error handling), src/data/ (in-memory stores and mock data)"
+}

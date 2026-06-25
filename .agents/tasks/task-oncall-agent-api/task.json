@@ -1,0 +1,7 @@
+{
+  "task_id": "task-oncall-agent-api",
+  "task_description": "Implement the complete OnCall AI Agent Control Plane API - a Node.js Express REST API with 28 endpoints across 7 route groups (Agent Lifecycle, Incident Management, Runbook Execution, Escalation Policies, Knowledge Base, Communications, Metrics & Observability). Includes Bearer token auth, in-memory state, realistic mock responses, tests, and documentation.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

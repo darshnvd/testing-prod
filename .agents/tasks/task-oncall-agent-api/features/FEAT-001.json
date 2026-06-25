@@ -1,0 +1,44 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Implement the complete OnCall AI Agent Control Plane API server with all 28 endpoints across 7 route groups, Bearer token authentication, in-memory state, realistic mock responses, tests, and documentation.",
+  "status": "in_progress",
+  "steps": [
+    "Create package.json with dependencies: express, dotenv, uuid, cors, helmet, morgan. Dev dependencies: jest, supertest, nodemon.",
+    "Create .env.example with PORT=3000, API_KEY=oncall-agent-secret-key-2024, NODE_ENV=development",
+    "Create src/index.js as the Express app entry point with middleware setup (cors, helmet, morgan, JSON body parser, Bearer token auth), route mounting, and error handler.",
+    "Create src/middleware/auth.js implementing Bearer token authentication that validates against the API_KEY env var. Exclude GET /health from auth.",
+    "Create src/middleware/errorHandler.js with centralized error handling.",
+    "Create src/data/store.js with in-memory data stores for: agent state (status, uptime, config), incidents (with realistic mock data for 3-4 incidents including AI diagnosis), runbooks (3-4 runbook definitions), escalation policies (2-3 policies), knowledge base documents, and communication logs.",
+    "Create src/routes/agent.js implementing Agent Lifecycle endpoints: GET /status (uptime, active incidents, health), POST /start (start with config profile), POST /stop (graceful stop), PATCH /config (update runtime config), GET /health (deep health check for integrations).",
+    "Create src/routes/incidents.js implementing Incident Management endpoints: GET / (list with query filters: status, sort, limit), GET /:incident_id (details with AI diagnosis), POST /triage (trigger AI triage for alert), POST /:incident_id/acknowledge, GET /:incident_id/diagnosis (AI diagnosis with confidence score), POST /:incident_id/resolve.",
+    "Create src/routes/runbooks.js implementing Runbook Execution endpoints: GET / (list with query: service, status), GET /:runbook_id (details), POST /execute (execute runbook), GET /executions/:execution_id (execution status), POST /executions/:execution_id/approve (approve pending).",
+    "Create src/routes/escalationPolicies.js implementing Escalation Policies endpoints: GET / (list), POST / (create), POST /escalate (trigger manual escalation).",
+    "Create src/routes/knowledgeBase.js implementing Knowledge Base endpoints: POST /search (semantic search), POST /documents (ingest document), GET /services/:service_name/dependencies (service dependency map).",
+    "Create src/routes/notifications.js implementing Communication & Notifications endpoints: POST /notifications/send (send incident update), GET /incidents/:incident_id/communications (communication log), POST /agent/chat (ask AI agent a question).",
+    "Create src/routes/observability.js implementing Metrics & Observability endpoints: POST /metrics (query service metrics), GET /deployments (recent deployments with query: service, limit, since), POST /logs (fetch correlated logs).",
+    "Create tests/api.test.js with comprehensive tests covering: auth middleware (reject missing/invalid tokens, accept valid token), at least one endpoint per route group (agent status, list incidents, list runbooks, list policies, search knowledge base, send notification, query metrics), error cases (404 for unknown incident, validation errors).",
+    "Create README.md with: project overview, setup instructions (npm install, copy .env.example to .env, npm start), API documentation (all 7 groups with endpoint summaries), authentication details, and example curl commands.",
+    "Ensure all npm scripts are correct: start (node src/index.js), dev (nodemon src/index.js), test (jest --forceExit)."
+  ],
+  "acceptance_criteria": [
+    "npm install completes successfully",
+    "npm start launches the server on port 3000 without errors",
+    "All 28 endpoints respond with appropriate status codes and JSON bodies",
+    "Bearer token authentication rejects requests without valid token (401)",
+    "Bearer token authentication passes requests with valid Authorization: Bearer <token> header",
+    "GET /api/v1/agent/status returns agent status with uptime, active incidents count, and health info",
+    "GET /api/v1/incidents returns a list of incidents with proper query filtering",
+    "POST /api/v1/incidents/triage accepts an alert payload and returns triage result with AI diagnosis",
+    "POST /api/v1/runbooks/execute accepts a runbook execution request and returns execution details",
+    "POST /api/v1/knowledge-base/search returns semantically relevant results",
+    "npm test passes all tests"
+  ],
+  "verification": [
+    "source ~/.nvm/nvm.sh && nvm use 22 && cd /projects/sandbox/testing-prod && npm install",
+    "source ~/.nvm/nvm.sh && nvm use 22 && cd /projects/sandbox/testing-prod && npm test",
+    "source ~/.nvm/nvm.sh && nvm use 22 && cd /projects/sandbox/testing-prod && timeout 5 npm start || true"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

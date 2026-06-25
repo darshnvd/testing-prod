@@ -1,0 +1,21 @@
+{
+  "id": "FEAT-002",
+  "type": "chore",
+  "description": "Commit all project files to the git repository with a descriptive commit message. Do NOT push.",
+  "status": "pending",
+  "steps": [
+    "Stage all files in /projects/sandbox/testing-prod with git add -A",
+    "Commit with message: 'feat: implement OnCall AI Agent Control Plane API with 28 endpoints, auth middleware, in-memory state, tests, and documentation'"
+  ],
+  "acceptance_criteria": [
+    "All project files are committed to the local git repository",
+    "git log shows exactly one new commit with a descriptive message",
+    "No uncommitted changes remain (git status is clean)"
+  ],
+  "verification": [
+    "cd /projects/sandbox/testing-prod && git status",
+    "cd /projects/sandbox/testing-prod && git log --oneline -5"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
