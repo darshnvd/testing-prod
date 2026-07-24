@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 const authenticate = require('./middleware/auth');
+const { createRateLimiter } = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
 
 // Route imports
@@ -28,6 +29,9 @@ app.use(express.json());
 
 // Authentication middleware (applied before routes)
 app.use(authenticate);
+
+// Rate limiting middleware (applied after authentication)
+app.use(createRateLimiter());
 
 // Route mounting
 app.use('/api/v1/agent', agentRoutes);
