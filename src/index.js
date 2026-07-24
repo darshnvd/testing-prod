@@ -16,6 +16,7 @@ const escalationPolicyRoutes = require('./routes/escalationPolicies');
 const knowledgeBaseRoutes = require('./routes/knowledgeBase');
 const notificationsRoutes = require('./routes/notifications');
 const observabilityRoutes = require('./routes/observability');
+const serviceHealthRoutes = require('./routes/serviceHealth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +38,7 @@ app.use('/api/v1/escalation-policies', escalationPolicyRoutes);
 app.use('/api/v1/knowledge-base', knowledgeBaseRoutes);
 app.use('/api/v1/notifications', notificationsRoutes);
 app.use('/api/v1/observability', observabilityRoutes);
+app.use('/api/v1/services', serviceHealthRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -51,7 +53,8 @@ app.get('/', (req, res) => {
       escalationPolicies: '/api/v1/escalation-policies',
       knowledgeBase: '/api/v1/knowledge-base',
       notifications: '/api/v1/notifications',
-      observability: '/api/v1/observability'
+      observability: '/api/v1/observability',
+      services: '/api/v1/services'
     }
   });
 });
