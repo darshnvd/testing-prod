@@ -109,9 +109,22 @@ router.post('/:incident_id/acknowledge', (req, res) => {
   }
 
   const { acknowledged_by } = req.body || {};
+  const acknowledger = acknowledged_by || 'api-user';
   incident.status = 'acknowledged';
-  incident.acknowledgedBy = acknowledged_by || 'api-user';
+  incident.acknowledgedBy = acknowledger;
   incident.updatedAt = new Date().toISOString();
+
+  // Auto-append timeline event for acknowledgement
+  if (!incident.timeline) {
+    incident.timeline = [];
+  }
+  incident.timeline.push({
+    id: uuidv4(),
+    type: 'status_change',
+    message: `Incident acknowledged by ${acknowledger}`,
+    author: acknowledger,
+    timestamp: new Date().toISOString()
+  });
 
   res.json({
     message: 'Incident acknowledged',
@@ -161,9 +174,90 @@ router.post('/:incident_id/resolve', (req, res) => {
   incident.updatedAt = new Date().toISOString();
   incident.resolutionNotes = resolution_notes || 'Resolved via API';
 
+  // Auto-append timeline event for resolution
+  if (!incident.timeline) {
+    incident.timeline = [];
+  }
+  incident.timeline.push({
+    id: uuidv4(),
+    type: 'status_change',
+    message: `Incident resolved - ${resolution_notes || 'Resolved via API'}`,
+    author: 'api-user',
+    timestamp: new Date().toISOString()
+  });
+
   res.json({
     message: 'Incident resolved',
     incident
+  });
+});
+
+// GET /api/v1/incidents/:incident_id/timeline - Get incident timeline
+router.get('/:incident_id/timeline', (req, res) => {
+  const incident = incidents.find(i => i.id === req.params.incident_id);
+
+  if (!incident) {
+    return res.status(404).json({
+      error: 'Not Found',
+      message: `Incident ${req.params.incident_id} not found`
+    });
+  }
+
+  let timeline = incident.timeline || [];
+
+  // Support optional ?type= filter
+  const { type } = req.query;
+  if (type) {
+    timeline = timeline.filter(event => event.type === type);
+  }
+
+  // Sort newest-first
+  timeline = [...timeline].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  res.json({
+    incidentId: incident.id,
+    timeline,
+    total: timeline.length
+  });
+});
+
+// POST /api/v1/incidents/:incident_id/timeline/events - Add custom timeline event
+router.post('/:incident_id/timeline/events', (req, res) => {
+  const incident = incidents.find(i => i.id === req.params.incident_id);
+
+  if (!incident) {
+    return res.status(404).json({
+      error: 'Not Found',
+      message: `Incident ${req.params.incident_id} not found`
+    });
+  }
+
+  const { type, message, author } = req.body || {};
+
+  if (!type || !message || !author) {
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'Missing required fields: type, message, author'
+    });
+  }
+
+  if (!incident.timeline) {
+    incident.timeline = [];
+  }
+
+  const event = {
+    id: uuidv4(),
+    type,
+    message,
+    author,
+    timestamp: new Date().toISOString()
+  };
+
+  incident.timeline.push(event);
+
+  res.status(201).json({
+    message: 'Timeline event added',
+    event
   });
 });
 

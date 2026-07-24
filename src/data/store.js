@@ -44,6 +44,11 @@ const incidents = [
     },
     alerts: [
       { source: 'datadog', metric: 'p99_latency', value: '4500ms', threshold: '1000ms' }
+    ],
+    timeline: [
+      { id: 'tl-001-1', type: 'incident_created', message: 'Incident created from datadog alert: p99 latency exceeded threshold', author: 'oncall-agent', timestamp: new Date(Date.now() - 1800000).toISOString() },
+      { id: 'tl-001-2', type: 'triage_started', message: 'AI triage initiated - analyzing latency anomaly on payment-service', author: 'oncall-agent', timestamp: new Date(Date.now() - 1790000).toISOString() },
+      { id: 'tl-001-3', type: 'diagnosis_complete', message: 'Root cause identified: connection pool exhaustion due to slow queries', author: 'oncall-agent', timestamp: new Date(Date.now() - 1500000).toISOString() }
     ]
   },
   {
@@ -69,6 +74,12 @@ const incidents = [
     },
     alerts: [
       { source: 'datadog', metric: 'memory_usage', value: '89%', threshold: '80%' }
+    ],
+    timeline: [
+      { id: 'tl-002-1', type: 'incident_created', message: 'Incident created from datadog alert: memory usage exceeded 80% threshold', author: 'oncall-agent', timestamp: new Date(Date.now() - 7200000).toISOString() },
+      { id: 'tl-002-2', type: 'triage_started', message: 'AI triage initiated - analyzing memory usage anomaly on user-service', author: 'oncall-agent', timestamp: new Date(Date.now() - 7190000).toISOString() },
+      { id: 'tl-002-3', type: 'diagnosis_complete', message: 'Root cause identified: session objects not garbage collected due to circular references', author: 'oncall-agent', timestamp: new Date(Date.now() - 6900000).toISOString() },
+      { id: 'tl-002-4', type: 'status_change', message: 'Incident acknowledged by engineer@company.com', author: 'engineer@company.com', timestamp: new Date(Date.now() - 6600000).toISOString() }
     ]
   },
   {
@@ -94,6 +105,11 @@ const incidents = [
     },
     alerts: [
       { source: 'cloudwatch', metric: '5xx_rate', value: '12%', threshold: '5%' }
+    ],
+    timeline: [
+      { id: 'tl-003-1', type: 'incident_created', message: 'Incident created from cloudwatch alert: 5xx error rate exceeded 5% threshold', author: 'oncall-agent', timestamp: new Date(Date.now() - 900000).toISOString() },
+      { id: 'tl-003-2', type: 'triage_started', message: 'AI triage initiated - analyzing 5xx error rate on api-gateway', author: 'oncall-agent', timestamp: new Date(Date.now() - 890000).toISOString() },
+      { id: 'tl-003-3', type: 'diagnosis_complete', message: 'Root cause identified: inventory-service cold starts after scale-down event', author: 'oncall-agent', timestamp: new Date(Date.now() - 600000).toISOString() }
     ]
   },
   {
@@ -119,6 +135,13 @@ const incidents = [
     },
     alerts: [
       { source: 'internal', metric: 'cert_days_remaining', value: '7', threshold: '14' }
+    ],
+    timeline: [
+      { id: 'tl-004-1', type: 'incident_created', message: 'Incident created from internal alert: SSL certificate expiring in 7 days', author: 'oncall-agent', timestamp: new Date(Date.now() - 86400000).toISOString() },
+      { id: 'tl-004-2', type: 'triage_started', message: 'AI triage initiated - analyzing certificate expiry on checkout-service', author: 'oncall-agent', timestamp: new Date(Date.now() - 86390000).toISOString() },
+      { id: 'tl-004-3', type: 'diagnosis_complete', message: 'Root cause identified: cert-manager IAM role missing acm:RequestCertificate permission', author: 'oncall-agent', timestamp: new Date(Date.now() - 86100000).toISOString() },
+      { id: 'tl-004-4', type: 'status_change', message: 'Incident acknowledged by ops-team@company.com', author: 'ops-team@company.com', timestamp: new Date(Date.now() - 72000000).toISOString() },
+      { id: 'tl-004-5', type: 'status_change', message: 'Incident resolved - certificate renewed and IAM permissions fixed', author: 'ops-team@company.com', timestamp: new Date(Date.now() - 43200000).toISOString() }
     ]
   }
 ];

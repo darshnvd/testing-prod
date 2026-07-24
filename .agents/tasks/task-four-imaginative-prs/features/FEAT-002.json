@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Add an Incident Timeline feature that records and retrieves a chronological event log for each incident. Adds a timeline array to incidents in the data store, auto-records status changes, and exposes GET /api/v1/incidents/:id/timeline and POST /api/v1/incidents/:id/timeline/events endpoints. Add corresponding tests.",
+  "status": "completed",
+  "steps": [
+    "Update src/data/store.js to add a 'timeline' array to each incident containing pre-seeded events (created, triage started, diagnosis complete, etc.).",
+    "Add GET /api/v1/incidents/:id/timeline endpoint in src/routes/incidents.js that returns the timeline array for a given incident, sorted newest-first. Support optional ?type= filter parameter.",
+    "Add POST /api/v1/incidents/:id/timeline/events endpoint in src/routes/incidents.js that allows adding custom timeline events (type, message, author fields required). Auto-generate id and timestamp.",
+    "Modify the existing acknowledge and resolve handlers to auto-append timeline events when incident status changes.",
+    "Add tests in tests/timeline.test.js covering: listing timeline events, filtering by type, adding custom events, auto-events on acknowledge/resolve, 404 for unknown incident."
+  ],
+  "acceptance_criteria": [
+    "GET /api/v1/incidents/:id/timeline returns chronological events",
+    "POST /api/v1/incidents/:id/timeline/events creates custom timeline entries",
+    "Status changes (acknowledge, resolve) auto-generate timeline events",
+    "Tests cover CRUD and auto-generation scenarios"
+  ],
+  "verification": [
+    "Review route handlers follow existing patterns in incidents.js",
+    "Confirm timeline data is properly structured in store.js"
+  ],
+  "blocked_reason": null,
+  "findings": "All 71 tests pass (58 existing api.test.js + 13 new timeline.test.js). Timeline arrays added to store incidents with pre-seeded events. GET and POST endpoints work correctly. Acknowledge and resolve handlers auto-append status_change timeline events. Branch: feat/incident-timeline created from feat/oncall-agent-api."
+}
