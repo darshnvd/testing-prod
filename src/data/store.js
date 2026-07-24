@@ -318,6 +318,53 @@ const serviceDependencies = {
   }
 };
 
+// Postmortems
+const postmortems = [
+  {
+    id: 'pm-001',
+    incident_id: 'inc-004',
+    title: 'SSL Certificate Expiry on Checkout Service',
+    status: 'published',
+    summary: 'SSL certificate auto-renewal failed due to missing IAM permissions, causing certificate to approach expiry on checkout-service.',
+    root_cause: 'Certificate manager IAM role was missing the acm:RequestCertificate permission after an IAM policy change two weeks prior.',
+    impact: 'No customer-facing impact as the certificate was renewed manually before expiry. Risk window of 7 days identified.',
+    lessons_learned: [
+      'IAM policy changes should trigger automated validation of dependent service permissions',
+      'Certificate expiry monitoring threshold should be extended from 14 to 30 days',
+      'Runbook for manual certificate renewal should be documented and tested quarterly'
+    ],
+    action_items: [
+      { description: 'Add acm:RequestCertificate to cert-manager IAM role', owner: 'infra-team@company.com', due_date: '2024-02-01', status: 'completed' },
+      { description: 'Implement IAM policy change validation pipeline', owner: 'platform-team@company.com', due_date: '2024-02-15', status: 'in_progress' },
+      { description: 'Extend cert monitoring threshold to 30 days', owner: 'sre-team@company.com', due_date: '2024-02-10', status: 'completed' }
+    ],
+    created_at: new Date(Date.now() - 40000000).toISOString(),
+    updated_at: new Date(Date.now() - 35000000).toISOString(),
+    author: 'ops-team@company.com'
+  },
+  {
+    id: 'pm-002',
+    incident_id: 'inc-004',
+    title: 'SSL Cert Renewal Process Improvement Plan',
+    status: 'draft',
+    summary: 'Follow-up postmortem focusing on systemic improvements to prevent certificate-related incidents across all services.',
+    root_cause: 'Lack of centralized certificate lifecycle management and insufficient monitoring coverage.',
+    impact: 'Potential for similar incidents across 12 other services using the same certificate management approach.',
+    lessons_learned: [
+      'Centralized certificate management would reduce operational risk',
+      'Automated testing of renewal processes should be part of CI/CD pipeline',
+      'Cross-team visibility into certificate status is needed'
+    ],
+    action_items: [
+      { description: 'Evaluate centralized cert management solutions (cert-manager, Vault PKI)', owner: 'infra-team@company.com', due_date: '2024-03-01', status: 'pending' },
+      { description: 'Create dashboard for certificate status across all services', owner: 'sre-team@company.com', due_date: '2024-02-28', status: 'pending' }
+    ],
+    created_at: new Date(Date.now() - 30000000).toISOString(),
+    updated_at: new Date(Date.now() - 25000000).toISOString(),
+    author: 'sre-team@company.com'
+  }
+];
+
 // Communication logs
 const communications = [
   {
@@ -402,6 +449,7 @@ module.exports = {
   escalationPolicies,
   knowledgeBase,
   serviceDependencies,
+  postmortems,
   communications,
   deployments
 };
