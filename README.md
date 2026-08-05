@@ -2,6 +2,30 @@
 
 A comprehensive REST API for managing an AI-powered on-call agent that handles incident response, runbook execution, escalation policies, knowledge base management, and observability.
 
+## Table of Contents
+
+- [Features](#features)
+- [Setup](#setup)
+- [Configuration](#configuration)
+- [Authentication](#authentication)
+- [API Endpoints](#api-endpoints)
+- [Example Requests](#example-requests)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- **Incident Management** - Automated triage, AI-powered diagnosis, and resolution workflows
+- **Runbook Execution** - Automated and approval-gated runbook execution for incident remediation
+- **Escalation Policies** - Configurable multi-level escalation with notification channels
+- **Knowledge Base** - Semantic search across documentation and service dependency mapping
+- **Observability** - Metrics querying, deployment tracking, and correlated log analysis
+- **AI-Powered Chat** - Natural language interface for querying agent status and incidents
+- **Health Monitoring** - Deep health checks across all integrated services
+
 ## Setup
 
 ### Prerequisites
@@ -12,6 +36,10 @@ A comprehensive REST API for managing an AI-powered on-call agent that handles i
 ### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/darshnvd/testing-prod.git
+cd testing-prod
+
 # Install dependencies
 npm install
 
@@ -32,6 +60,8 @@ npm run dev
 npm test
 ```
 
+The server starts at `http://localhost:3000` by default.
+
 ## Configuration
 
 Environment variables (see `.env.example`):
@@ -50,7 +80,11 @@ All endpoints (except `GET /api/v1/agent/health`) require Bearer token authentic
 curl -H "Authorization: Bearer oncall-agent-secret-key-2024" http://localhost:3000/api/v1/agent/status
 ```
 
+Unauthenticated requests will receive a `401 Unauthorized` response.
+
 ## API Endpoints
+
+The API exposes **28 endpoints** across 7 modules:
 
 ### 1. Agent Lifecycle (`/api/v1/agent/`)
 
@@ -204,6 +238,26 @@ curl -X POST -H "Authorization: Bearer oncall-agent-secret-key-2024" \
 └── tests/
     └── api.test.js           # Comprehensive API tests
 ```
+
+## Testing
+
+Run the test suite with:
+
+```bash
+npm test
+```
+
+Tests cover all API endpoints including authentication, request validation, and expected response formats. The test suite uses **Jest** and **Supertest** for HTTP assertions.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/my-feature`)
+3. Commit your changes (`git commit -m 'feat: add my feature'`)
+4. Push to the branch (`git push origin feat/my-feature`)
+5. Open a Pull Request
+
+Please follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.
 
 ## License
 
