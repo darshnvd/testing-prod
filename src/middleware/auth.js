@@ -1,6 +1,11 @@
-// Paths that do not require authentication
+// Paths that do not require authentication.
+// Health/liveness/readiness probes must be reachable by orchestrators
+// (e.g. Kubernetes) that do not send an Authorization header.
 const AUTH_EXEMPT_PATHS = [
-  { path: '/api/v1/agent/health', method: 'GET' }
+  { path: '/api/v1/agent/health', method: 'GET' },
+  { path: '/api/v1/health', method: 'GET' },
+  { path: '/api/v1/health/ready', method: 'GET' },
+  { path: '/api/v1/health/live', method: 'GET' }
 ];
 
 function isAuthExempt(req) {

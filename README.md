@@ -44,7 +44,14 @@ Environment variables (see `.env.example`):
 
 ## Authentication
 
-All endpoints (except `GET /api/v1/agent/health`) require Bearer token authentication:
+All endpoints require Bearer token authentication, except the following health probes (so orchestrators like Kubernetes can reach them without a token):
+
+- `GET /api/v1/agent/health`
+- `GET /api/v1/health`
+- `GET /api/v1/health/ready`
+- `GET /api/v1/health/live`
+
+Example authenticated request:
 
 ```bash
 curl -H "Authorization: Bearer oncall-agent-secret-key-2024" http://localhost:3000/api/v1/agent/status
